@@ -21,9 +21,9 @@ with rasterio.open(tif_path) as src:
     transformer = Transformer.from_crs("EPSG:4326", raster_crs, always_xy=True)
 
     # Custom colormap: magma + blue sea
-    magma = plt.get_cmap("magma", 256)
-    newcolors = magma(np.linspace(0, 1, 256))
-    sea_blue = np.array([0/255, 105/255, 148/255, 1])
+    terrain = plt.get_cmap("terrain", 256)
+    newcolors = terrain(np.linspace(0.25, 1, 256))
+    sea_blue = np.array([0/255, 105/255, 148/255, 0.5])
     newcolors[0] = sea_blue
     custom_cmap = mcolors.ListedColormap(newcolors)
 
@@ -33,7 +33,7 @@ with rasterio.open(tif_path) as src:
     for ax, (label, (lon, lat)) in zip(axs, locations.items()):
         # Convert coordinates to raster CRS
         x_center, y_center = transformer.transform(lon, lat)
-        buffer = 20_000  # 50 km in meters
+        buffer = 50_000  # 50 km in meters
 
         # Define bounding box
         left = x_center - buffer
